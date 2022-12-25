@@ -19,6 +19,7 @@ const DialogCambioPrecio = () => {
 
   const verificar = ()=>{
     let valueprecio = parseFloat(inputPrecio) * parseFloat(fd.datosMoneda.valor_moneda) ;
+    
     if(valueprecio < pr.preciom_producto){
       setErrors({...errors,cambioPrecio:true,cambioPrecioMensaje:"El precio no puede ser menor que el establecido"});
       input.current.focus();
@@ -27,15 +28,14 @@ const DialogCambioPrecio = () => {
       cambiarPrecio(indexPrecioCambiar,valueprecio);
       cerrar();
     }
+
   }
-  
-  
-  return (
-    <>
-    {
-      indexPrecioCambiar >= 0 && 
-    
-    <form onSubmit={verificar}>
+
+  if(indexPrecioCambiar>=0)
+  {
+
+    return (
+      <form onSubmit={verificar}>
     <Dialog
       fullWidth
       open={dialogs.cambiarPrecio}
@@ -46,8 +46,7 @@ const DialogCambioPrecio = () => {
       <DialogContent>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="body1">
-              Precio original: { valorConvertido(pr.precio_original)}{" "}
+            <Typography variant="body1">Precio original: { valorConvertido(pr.precio_original)}{" "}
               {fd.datosMoneda.abreviatura_moneda}
             </Typography>
           </Grid>
@@ -98,7 +97,12 @@ const DialogCambioPrecio = () => {
       </DialogActions>
     </Dialog>
     </form>
-    }
+    )
+  }
+  
+  
+  return (
+    <>
     </>
   );
 };

@@ -4,6 +4,7 @@ import DialogBuscarCliente from './DialogBuscarCliente'
 import DialogBuscarProducto from './DialogBuscarProducto'
 import DialogCambioCliente from './DialogCambioCliente'
 import DialogCambioPrecio from './DialogCambioPrecio'
+import DialogComision from './DialogComision'
 import DialogFinalizar from './DialogFinalizar'
 import DialogImagen from './DialogImagen'
 import DialogImprimir from './DialogImprimir'
@@ -18,6 +19,7 @@ import VentasProvider from './VentasProvider'
 const Ventas = () => {
   return (
     <VentasProvider>
+        <DialogComision />
         <DialogCambioPrecio />
         <DialogImagen />
         <DialogFinalizar />

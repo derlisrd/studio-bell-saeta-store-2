@@ -3,14 +3,19 @@ import { useVentas } from "./VentasProvider";
 
 const VentasTablaOpciones = ({index}) => {
 
-    const {borrarItem,openCambiarPrecio,openImagen} = useVentas();
+    const {borrarItem,openCambiarPrecio,openImagen,openComision} = useVentas();
 
   return (
-    <Stack direction="row" alignItems="center" spacing={1}>
+    <Stack direction="row" alignItems="center" spacing={0}>
       
       <IconButton color='success' onClick={()=>{openImagen(index)}} size="large">
         <Tooltip placement="top" title="Imagen" arrow>
         <Icon>image</Icon>
+        </Tooltip>
+      </IconButton>
+      <IconButton color='success' onClick={()=>{openComision(index)}} size="large">
+        <Tooltip placement="top" title="Comision" arrow>
+        <Icon>person</Icon>
         </Tooltip>
       </IconButton>
 
@@ -19,12 +24,12 @@ const VentasTablaOpciones = ({index}) => {
         <Icon>request_quote</Icon>
         </Tooltip>
       </IconButton>
-      
       <IconButton color='error' onClick={()=>{borrarItem(index)}} size="large">
       <Tooltip placement="top" title="Borrar item" arrow>
         <Icon>delete</Icon>
         </Tooltip>
       </IconButton>
+      
       
     </Stack>
   );

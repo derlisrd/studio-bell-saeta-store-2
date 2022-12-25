@@ -48,7 +48,7 @@ const VentasProvider = ({ children }) => {
   };
   const [cargas, setCargas] = useState(initialCargas);
   
-  const initialDialogs={main:!0,nota:!1,buscarProducto:!1,cambiarPrecio:!1,buscarCliente:!1,registrarCliente:!1,finalizarVenta:!1,imprimirNotaPedido:!1,imprimirTicket:!1,imprimirFactura:!1,imprimirPresupuesto:!1,ayuda:!1,cambioCliente:!1,abrirCaja:!1,imagen:!1};
+  const initialDialogs={main:!0,comision:!1,nota:!1,buscarProducto:!1,cambiarPrecio:!1,buscarCliente:!1,registrarCliente:!1,finalizarVenta:!1,imprimirNotaPedido:!1,imprimirTicket:!1,imprimirFactura:!1,imprimirPresupuesto:!1,ayuda:!1,cambioCliente:!1,abrirCaja:!1,imagen:!1};
   const [dialogs, setDialogs] = useState(initialDialogs);
   const [IDNotaPedido,setIDNotaPedido] = useState("");
   const [indexFactura, setIndexFactura] = useState(storage ? storage.indexFactura : 0);
@@ -332,7 +332,7 @@ const VentasProvider = ({ children }) => {
           table: "comisions",token: token_user,
           data: {
             id_factura_comision: ID_FACTURA,
-            id_empleado_comision: df.datosFactura.id_empleado,
+            id_empleado_comision: e.id_empleado, //df.datosFactura.id_empleado,
             id_producto_comision: e.id_producto,
             porcentaje: e.porcentaje_comision,
             cantidad_vendido_comision: e.cantidad_producto,
@@ -574,6 +574,8 @@ const VentasProvider = ({ children }) => {
     }
   }
 
+
+
   const consultarPorCodigo = async (codigo) => {
     let fa = {...datosFacturas.facturas[indexFactura]}; 
     setCargas({ ...cargas, cargandoProducto: true });
@@ -653,18 +655,27 @@ const VentasProvider = ({ children }) => {
       comision_producto: (subtotal * porcentaje_comision) / 100,
       id_impuesto: prod.id_impuesto,
       id_producto: prod.id_producto,
-      url_imagen: prod?.url_imagen ? prod.url_imagen : ""
+      url_imagen: prod?.url_imagen ? prod.url_imagen : "",
+      id_empleado: ""
     };
 
     if(prod.preguntar_precio === "1"){
       openCambiarPrecio(df.itemsFactura.length)
     }
-
+      openComision(df.itemsFactura.length)
     let fObjInsert = { ...datosFacturas };
     fObjInsert.facturas[indexFactura].itemsFactura.push(obj);
     hacerTotal(fObjInsert);
     inputCantidad.current.value = "1";
+    
   };
+
+  const openComision = (index)=>{
+    console.log(index)
+    setIndexPrecioCambiar(index)
+    setDialogs({...dialogs,comision:true,buscarProducto:false})
+  }
+
 
   const hacerTotal = (fObj) => {
     let suma = 0; let iva = 0;
@@ -758,7 +769,9 @@ const VentasProvider = ({ children }) => {
   const borrarItem = (index) => {
     let facturaObj = { ...datosFacturas };
     facturaObj.facturas[indexFactura].itemsFactura.splice(index, 1);
+    setIndexPrecioCambiar(index - 1);
     hacerTotal(facturaObj);
+    
   };
   
   const AgregarCantidadMetodoPago = ()=>{
@@ -1046,7 +1059,7 @@ const VentasProvider = ({ children }) => {
     cerrarDialogFactura,
     insertarProductoTabla,restarCantidad,sumarCantidad,
     AgregarCantidadMetodoPago,borrarMetodoPago,changeMonedas,Anotar,CargarNota,permisos,cambiarDeposito,
-    MetodoDescuento,lang,IDNotaPedido,valorConvertido
+    MetodoDescuento,lang,IDNotaPedido,valorConvertido,openComision
   }
 
 
@@ -1086,7 +1099,7 @@ export const useVentas = () => {
     cerrarDialogFactura,
     insertarProductoTabla,restarCantidad,sumarCantidad,
     AgregarCantidadMetodoPago,borrarMetodoPago,changeMonedas,Anotar,CargarNota,permisos,cambiarDeposito,
-    MetodoDescuento,lang,IDNotaPedido,valorConvertido
+    MetodoDescuento,lang,IDNotaPedido,valorConvertido,openComision
 
   } = useContext(Contexto);
   return {id_user,token_user,
@@ -1119,7 +1132,7 @@ export const useVentas = () => {
     cerrarDialogFactura,
     insertarProductoTabla,restarCantidad,sumarCantidad,
     AgregarCantidadMetodoPago,borrarMetodoPago,changeMonedas,Anotar,CargarNota,permisos,cambiarDeposito,
-    MetodoDescuento,lang,IDNotaPedido,valorConvertido
+    MetodoDescuento,lang,IDNotaPedido,valorConvertido,openComision
   };
 };
 

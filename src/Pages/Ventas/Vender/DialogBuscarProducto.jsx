@@ -80,7 +80,8 @@ const DialogBuscarProducto = () => {
             insertarProductoTabla(valor);
           }
       }  
-        cerrar();
+      setCargando(false);
+        //cerrar();        
       };
     
       const cerrar = () => {
