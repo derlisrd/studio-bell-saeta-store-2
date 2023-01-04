@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, InputLabel, MenuItem, Select, Zoom } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Zoom } from '@mui/material'
 import React from 'react'
 import { useVentas } from './VentasProvider'
 
@@ -13,6 +13,12 @@ const DialogComision = () => {
       let newvalue = (e.target.value)
       let fa = {...datosFacturas}
       fa.facturas[indexFactura].itemsFactura[indexPrecioCambiar].id_empleado = newvalue
+      setearFactura(fa)
+    }
+    const changeComision = e=>{
+      let newvalue = (e.target.value)
+      let fa = {...datosFacturas}
+      fa.facturas[indexFactura].itemsFactura[indexPrecioCambiar].porcentaje_comision = parseFloat(newvalue)
       setearFactura(fa)
     }
 
@@ -35,7 +41,7 @@ const DialogComision = () => {
       <DialogContent dividers>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-          <FormControl fullWidth>
+            <FormControl fullWidth>
                   <InputLabel >
                     {lang.seleccione_vendedor}
                   </InputLabel>
@@ -55,7 +61,10 @@ const DialogComision = () => {
                       </MenuItem>
                     ))}
                   </Select>
-                </FormControl>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField fullWidth type="number" value={fa.itemsFactura[indexPrecioCambiar].porcentaje_comision} onChange={changeComision} />
           </Grid>
         </Grid>
       </DialogContent>
