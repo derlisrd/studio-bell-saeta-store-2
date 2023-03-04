@@ -1,13 +1,13 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Icon, InputAdornment, LinearProgress, TextField, Zoom } from '@mui/material';
 import {useState,useRef} from 'react';
-import { useLang } from '../../Contexts/LangProvider';
-import { useLogin } from '../../Contexts/LoginProvider';
-import { APICALLER } from '../../Services/api';
+import { useLang } from '../../../Contexts/LangProvider';
+import { useLogin } from '../../../Contexts/LoginProvider';
+import { APICALLER } from '../../../Services/api';
 import { useAgenda } from './AgendaProvider';
 
 function RegistraCliente() {
 
-    const {dialogs,setDialogs} = useAgenda()
+    const {dialogs,setDialogs,setCliente} = useAgenda()
     const {lang} = useLang()
     const {userData} = useLogin();
     const {token_user} = userData;
@@ -31,6 +31,7 @@ function RegistraCliente() {
       const [cargando,setCargando] = useState(false);
     const cerrar = () =>{
         setDialogs({...dialogs,registrarCliente:false});
+        setFormCliente(initialForm)
     }
     const cambiarValor = e => {
         const { name, value } = e.target; setFormCliente({ ...formCliente, [name]: value });
@@ -58,11 +59,14 @@ function RegistraCliente() {
         if(res.found===0){
 
             const ins = await APICALLER.insert({table:"clientes",data:formCliente,token:token_user})
-            if(ins.response){ 
-               
-              
-            cerrar()
-
+            if(ins.response){
+              console.log(ins)
+              setCliente({active:true,
+                nombre: formCliente.nombre_cliente, 
+                id_cliente_agenda: ins.last_id, 
+                telefono_cliente: formCliente.telefono_cliente,
+                doc: formCliente.ruc_cliente })
+              cerrar()
             }
         }
         else{
@@ -73,6 +77,9 @@ function RegistraCliente() {
         }
         setCargando(false);
       };
+
+
+
 
     return (
         <form onSubmit={VerificarRegistro}>

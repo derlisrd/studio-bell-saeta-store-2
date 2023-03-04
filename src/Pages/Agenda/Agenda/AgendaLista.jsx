@@ -5,7 +5,7 @@ import daygridPlugin from "@fullcalendar/daygrid";
 import esLocale from "@fullcalendar/core/locales/es";
 import interactionPlugin from "@fullcalendar/interaction";
 import {useAgenda} from './AgendaProvider';
-import LoadingBackDrop from "../../Components/UI/LoadingBackDrop";
+import LoadingBackDrop from "../../../Components/UI/LoadingBackDrop";
 
 
 const AgendaLista = () => {
@@ -54,7 +54,7 @@ const AgendaLista = () => {
         right: "dayGridMonth,dayGrid"
       }}
       events={eventos}
-      dateClick={e=>console.log(e)} 
+      dateClick={e=>{}} 
       eventClick={e=>reAgendar(e.event.id)}
     />
     </Box>

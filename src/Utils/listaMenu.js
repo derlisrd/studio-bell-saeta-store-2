@@ -39,13 +39,6 @@ export const listaMenu = [
         icon:"calendar_month",
         submenu:[
           {
-            id:49,
-            title:'turnos',
-            icon:'login',
-            color: "#a0aec0",
-            url:`${BASEURL}/turnos`,
-          },
-          {
             id:51,
             title:'agenda',
             icon:'date_range',

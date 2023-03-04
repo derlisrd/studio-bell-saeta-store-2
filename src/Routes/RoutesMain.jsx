@@ -41,8 +41,8 @@ import Entregas from "../Pages/Ventas/Entregas";
 import Transferencias from "../Pages/Productos/Transferencias";
 import Cuentas from "../Pages/Cuentas";
 import ProductCode from "../Pages/Productos/Productos/ProductCode";
-import Agenda from "../Pages/Agenda";
-import Turnos from "../Pages/Turnos";
+import Agenda from "../Pages/Agenda/Agenda";
+
 import Backup from "../Pages/Backup";
 import Comisiones from "../Pages/Caja/Comisiones";
 import FormasPago from "../Pages/Ventas/FormasPago";
@@ -91,7 +91,6 @@ const RoutesMain = () => {
       <Route path={R+"formaspago"} element={<PrivateRoute id={67}><FormasPago /></PrivateRoute>} />
       <Route path={R+"comisiones"} element={<PrivateRoute id={66}><Comisiones /></PrivateRoute>} />
       <Route path={R+"cuentas"} element={<PrivateRoute id={47}><Cuentas /></PrivateRoute>} />
-      <Route path={R+"turnos"} element={<PrivateRoute id={51}><Turnos /></PrivateRoute>} />
       <Route path={R+"agenda"} element={<PrivateRoute id={51}><Agenda /></PrivateRoute>} />
       <Route path={R+"transferencias"} element={<PrivateRoute id={60}><Transferencias /></PrivateRoute>} />
       <Route path={R+"entregas"} element={<PrivateRoute id={16}><Entregas /></PrivateRoute>} />

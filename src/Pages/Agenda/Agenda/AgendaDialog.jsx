@@ -1,22 +1,25 @@
-import { Dialog, DialogContent, Grid, TextField,Chip,Stack, DialogActions, Button, DialogTitle, CircularProgress, Tooltip, IconButton, Icon, InputAdornment, Zoom, Alert } from "@mui/material";
-import { Box } from "@mui/system";
-import { useRef,useState } from "react";
-import { APICALLER } from "../../Services/api";
+import {Box, Dialog, DialogContent, Grid, TextField,Chip,Stack, DialogActions, Button, DialogTitle, Alert
+  /* CircularProgress, Tooltip, IconButton, Icon, InputAdornment, Zoom, Autocomplete */ } from "@mui/material";
+import { /* useRef, */useState } from "react";
+import { funciones } from "../../../Functions";
+//import { APICALLER } from "../../../Services/api";
 import { useAgenda } from "./AgendaProvider";
+import SearchCliente from "./SearchCliente";
 
 const AgendaDialog = () => {
   const { dialogs, setDialogs,insertarAgendar,dates,setDates,initialForm,cliente,setCliente,initialCliente } = useAgenda();
-  const inputDoc = useRef(null);
-  const initialLoads = {
+  //const inputDoc = useRef(null);
+  /* const initialLoads = {
     inputbuscacliente:false
-  }
+  } */
   const initialError = {
     active:false,
-    message:null
+    message:null,
+    code:null
   }
   
   const [error,setError] = useState(initialError);
-  const [loads,setLoads]= useState(initialLoads);
+  //const [loads,setLoads]= useState(initialLoads);
   const [form,setForm] = useState(initialForm)
 
   const onChange = (e) => {
@@ -24,9 +27,9 @@ const AgendaDialog = () => {
     setForm({ ...form, [name]: value });
   };
 
-  const searchCliente = async(doc)=>{
+  /* const searchCliente = async(doc)=>{
     setLoads({inputbuscacliente:true})
-    let res = await APICALLER.get({table:"clientes",where:`ruc_cliente,=,'${doc}'`});
+    let res = await APICALLER.get({table:"clientes",where:`ruc_cliente,=,'${doc}'`,fields:'nombre_cliente,ruc_cliente,telefono_cliente'});
 
     if(res.response){
       if(res.found===0){
@@ -37,7 +40,8 @@ const AgendaDialog = () => {
         setCliente({
           active:true,
           nombre:res.results[0].nombre_cliente,
-          doc:res.results[0].ruc_cliente
+          doc:res.results[0].ruc_cliente,
+          
         })
         setForm({...form,id_cliente_agenda:res.results[0].id_cliente})
       }
@@ -46,7 +50,7 @@ const AgendaDialog = () => {
       setError({active:true,message:"Ocurrio un error de conexión"})
     }
     setLoads({inputbuscacliente:false})
-  }
+  } */
 
   const changeDate = e=>{
     setDates({...dates, [e.target.name]: e.target.value})
@@ -74,24 +78,26 @@ const AgendaDialog = () => {
     }
 
     if(f.descripcion_agenda === ""){
-      setError({active:true, message:"Ingrese descripcion"});
+      setError({active:true, message:"Ingrese una descripción",code:0});
       return false;
     }
 
     let today = new Date();
-    if((new Date(f.fecha_fin_agenda))<today ||  (new Date(f.inicio_fin_agenda))<today )
+    let spliInicio = funciones.splitFecha(f.fecha_inicio_agenda)
+    let spliFin = funciones.splitFecha(f.fecha_fin_agenda)
+    if((spliInicio)<today ||  (spliFin)<today )
     {
-      setError({active:true, message:"No se puede agendar en el pasado"});
+      setError({active:true, message:"No se puede agendar en el pasado",code:1});
       return false;
     }
     
     if(f.id_cliente_agenda===null || !cliente.active){
-      setError({active:true, message:"Ingrese el cliente"});
+      setError({active:true, message:"Ingrese el cliente",code:3});
       return false;
     }
 
     insertarAgendar(f)
-
+    cerrar();
   }
 
   return (
@@ -108,11 +114,13 @@ const AgendaDialog = () => {
               </Alert>
               }
           </Grid>
+
           <Grid item xs={12}>
             <TextField
               autoComplete="off"
               autoFocus required
               fullWidth
+              error={error.code===0}
               label="Descripción de agenda"
               name="descripcion_agenda"
               value={form.descripcion_agenda}
@@ -122,39 +130,17 @@ const AgendaDialog = () => {
           <Grid item xs={12}>
             {
               cliente.active &&
-              <Alert>
-                {cliente.doc}: {cliente.nombre } 
+              <Alert icon={false}>
+                <b>Documento:</b> {cliente.doc}  - <b>Nombre:</b> {cliente.nombre } - <b>Tel:</b> {cliente.telefono_cliente} 
               </Alert>
             }
           </Grid>
         <Grid item xs={12}>
-        <TextField
-          onKeyPress={e => {e.key === "Enter" && searchCliente(inputDoc.current.value);}}
-          label="Documento de cliente" autoComplete="off"
-          helperText="Ingrese el doc. y presione Enter"
-          fullWidth inputRef={inputDoc}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        {loads.inputbuscacliente ? (<CircularProgress size={24} />) : (
-                          <Tooltip TransitionComponent={Zoom} arrow title={<h2>Buscar cliente</h2>}>
-                            <IconButton onClick={() =>{ setDialogs({...dialogs,buscarCliente:true})}}>
-                              <Icon>search</Icon>
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                      </InputAdornment>
-                    ),
-                    endAdornment: (
-                      <Tooltip TransitionComponent={Zoom} arrow title={<h2>Registrar cliente</h2>}>
-                        <IconButton onClick={() => {setDialogs({...dialogs,registrarCliente: true});}}>
-                          <Icon color="primary">person_add_alt_1</Icon>
-                        </IconButton>
-                      </Tooltip>
-                    ),
-                  }}
-                />
-          </Grid>
+            <SearchCliente />
+        </Grid>
+        <Grid item xs={12}>
+            <Button variant="outlined" onClick={()=>{setDialogs({ ...dialogs, registrarCliente:true })}} >Registrar nuevo cliente</Button>
+        </Grid>
           <Grid item xs={12} sm={4}>
             <TextField
               fullWidth
